@@ -17,43 +17,55 @@ import android.util.Log;
  * This class echoes a string called from JavaScript.
  */
 public class Myplugin extends CordovaPlugin {
-    private static final  String ECHO = "echo";
+    private static final String ECHO = "echo";
     private static final String NEW_TASK = "newTask";
     private static final String DEL_TASK = "delTask";
 
-    private ArrayList <Timer> alt = new ArrayList<>();
+    private ArrayList < Timer > alt = new ArrayList < > ();
 
     @Override
-    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-        if (action.equals(ECHO)) {
-            String message = args.getString(0);
-            this.echo(message, callbackContext);
-            return true;
-        } 
-        else if (action.equals(NEW_TASK)) {
-            this.newTask(callbackContext);
-            return true;
-        } 
-        else if (action.equals(DEL_TASK)) {
-            this.delTask(callbackContext);
-            return true;
+    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
+        try {
+            for (int i = 0; i < args.length(); i++) {
+                Log.i("tag",args.getJSONObject(i).toString());
+            }
+            if (action.equals(ECHO)) {
+                String message = args.getString(0);
+                this.echo(message, callbackContext);
+                return true;
+            } else if (action.equals(NEW_TASK)) {
+                String phone = args.getString(0);
+                String message = args.getString(1);
+                int nsec = args.getInt(2);
+                this.newTask(phone, message, nsec, callbackContext);
+                return true;
+            } else if (action.equals(DEL_TASK)) {
+                int index = args.getInt(0);
+                this.delTask(index, callbackContext);
+                return true;
+            }
+            Log.i("tag", "no function called");
+            return false;
+        } catch (JSONException e) {
+            Log.i("tag", e.getMessage());
+            return false;
         }
-        Log.i("tag","no function called");
-        return false;
     }
 
     private void echo(String message, CallbackContext callbackContext) {
         if (message != null && message.length() > 0) {
-            Log.i("tag","LOG: " + message);
+            Log.i("tag", "LOG: " + message);
             callbackContext.success("LOLLO: " + message); // la callback SUCCESS via javascript
         } else {
-            Log.i("tag","error echo");
+            Log.i("tag", "error echo");
             callbackContext.error("Expected one non-empty string argument."); // la callback ERROR via javascript
         }
     }
 
-    private void newTask(CallbackContext callbackContext) {
+    private void newTask(String phone, String message, int nsec, CallbackContext callbackContext) {
         try {
+            Log.i("tag", phone + " " + message);
+            Log.i("tag", Integer.toString(nsec));
             Timer t = new Timer();
             TimerTask ts = new TimerTask() {
                 @Override
@@ -68,20 +80,26 @@ public class Myplugin extends CordovaPlugin {
             alt.add(t);
             callbackContext.success("created task"); // la callback SUCCESS via javascript
         } catch (Exception e) {
-            Log.i("tag","error in new task");
-            callbackContext.error("error: "+e.getMessage()); // la callback ERROR via javascript
+            Log.i("tag", "error in new task");
+            callbackContext.error("error: " + e.getMessage()); // la callback ERROR via javascript
 
         }
     }
 
-    private void delTask(CallbackContext callbackContext) {
+    private void delTask(int index, CallbackContext callbackContext) {
         try {
+            Log.i("tag", Integer.toString(index));
+            Timer t = alt.get(0);
+            t.cancel();
+            t.purge();
+
             alt.remove(0);
-            Log.i("tag","task removed");
+
+            Log.i("tag", "task removed");
             callbackContext.success("removed task"); // la callback SUCCESS via javascript
         } catch (Exception e) {
-            Log.i("tag","error in del task");
-            callbackContext.error("error: "+e.getMessage()); // la callback ERROR via javascript
+            Log.i("tag", "error in del task");
+            callbackContext.error("error: " + e.getMessage()); // la callback ERROR via javascript
 
         }
     }
