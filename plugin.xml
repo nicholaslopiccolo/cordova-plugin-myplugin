@@ -15,7 +15,9 @@
                 <param name="android-package" value="cordova.plugin.myplugin.Myplugin" />
             </feature>
         </config-file>
-        <config-file parent="/*" target="AndroidManifest.xml"></config-file>
+        <config-file parent="/manifest" target="AndroidManifest.xml">
+            <uses-feature android:name="android.hardware.telephony" android:required="false" />
+        </config-file>
         <source-file src="src/android/Myplugin.java" target-dir="src/cordova-plugin-myplugin/Myplugin" />
     </platform>
 
