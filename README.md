@@ -7,6 +7,22 @@ cordova plugin add https://github.com/nicholaslopiccolo/cordova-plugin-myplugin.
 # How to test new code before commi
 cordova plugin add --link ../cordova-plugin-myplugin/
 
+
+# Debug a plugin
+Listen all the Log from a specific tag:
+Java code example:
+```
+import android.util.Log;
+Log.i("tag","this is a log.");
+```
+
+From terminal:
+```
+adb -d logcat tag:I *:S
+```
+
 # continuo
 Un buon plugin da cui prendere spunto: https://github.com/katzer/cordova-plugin-local-notifications/blob/master/plugin.xml
+
+
 
