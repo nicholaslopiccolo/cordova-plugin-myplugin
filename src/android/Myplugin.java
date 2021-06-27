@@ -201,8 +201,6 @@ public class Myplugin extends CordovaPlugin {
 		SmsManager manager = SmsManager.getDefault();
 		final ArrayList<String> parts = manager.divideMessage(message);
 
-        Log.i("tag","1 messaggio inviato: "+message);
-
 		// by creating this broadcast receiver we can check whether or not the SMS was sent
 		final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 
@@ -235,18 +233,11 @@ public class Myplugin extends CordovaPlugin {
 			}
 		};
 
-        Log.i("tag","2 messaggio inviato: "+message);
-
         // randomize the intent filter action to avoid using the same receiver
 		String intentFilterAction = INTENT_FILTER_SMS_SENT + java.util.UUID.randomUUID().toString();
 		this.cordova.getActivity().registerReceiver(broadcastReceiver, new IntentFilter(intentFilterAction));
 
-        Log.i("tag","3 messaggio inviato: "+message);
-
 		PendingIntent sentIntent = PendingIntent.getBroadcast(this.cordova.getActivity(), 0, new Intent(intentFilterAction), 0);
-
-        Log.i("tag","4 messaggio inviato: "+message);
-
 
 		// depending on the number of parts we send a text message or multi parts
 		if (parts.size() > 1) {
@@ -257,10 +248,7 @@ public class Myplugin extends CordovaPlugin {
 			manager.sendMultipartTextMessage(phoneNumber, null, parts, sentIntents, null);
 		}
 		else {
-            Log.i("tag","5 messaggio inviato: "+message);
 			manager.sendTextMessage(phoneNumber, null, message, sentIntent, null);
-            Log.i("tag","6 messaggio inviato: "+message);
-
 		}
 	}
 }

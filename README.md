@@ -27,6 +27,7 @@ adb -d logcat tag:I *:S
 
 # continuo
 Un buon plugin da cui prendere spunto: https://github.com/katzer/cordova-plugin-local-notifications/blob/master/plugin.xml
-
-
+```
+<preference name="KeepRunning" value="true"/>
+```
 
